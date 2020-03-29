@@ -1,4 +1,4 @@
-# headstorm-scala-style-guide
+# Headstorm Scala Style Guide
 
 A pure functional Scala style guide.
 
