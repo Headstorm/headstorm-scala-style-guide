@@ -1,19 +1,15 @@
 # headstorm-scala-style-guide
 
-A pure functional Scala style guide
+A pure functional Scala style guide.
 
 This guide draws from our experience coaching and working with engineers contributing to Scala functional programming projects as well as our Scala engineering team.
-
-Code is __written once__ by its author, but __read and modified multiple times__ by lots of other engineers. As most bugs actually come from future modification of the code, we need to optimize our codebase for long-term, global readability and maintainability. The best way to achieve this is to write simple code.
 
 Scala is an incredibly powerful language that is capable of many paradigms. We have found that the following guidelines work well for us on projects with high velocity. Depending on the needs of your team, your mileage might vary.
 
 
 ## <a name='TOC'>Table of Contents</a>
 
-1. [Document History](#history)
-
-2. [Syntactic Style](#syntactic)
+1. [Syntactic Style](#syntactic)
     * [Naming Convention](#naming)
     * [Variable Naming Convention](#variable-naming)
     * [Line Length](#linelength)
@@ -30,7 +26,7 @@ Scala is an incredibly powerful language that is capable of many paradigms. We h
     * [Infix Methods](#infix)
     * [Anonymous Methods](#anonymous)
 
-1. [Scala Language Features](#lang)
+2. [Scala Language Features](#lang)
     * [Case Classes and Immutability](#case_class_immutability)
     * [apply Method](#apply_method)
     * [override Modifier](#override_modifier)
@@ -47,21 +43,21 @@ Scala is an incredibly powerful language that is capable of many paradigms. We h
     * [Monadic Chaining](#chaining)
     * [Symbol Literals](#symbol)
 
-1. [Concurrency](#concurrency)
+3. [Concurrency](#concurrency)
     * [Scala concurrent.Map](#concurrency-scala-collection)
     * [Explicit Synchronization vs Concurrent Collections](#concurrency-sync-vs-map)
     * [Explicit Synchronization vs Atomic Variables vs @volatile](#concurrency-sync-vs-atomic)
     * [Private Fields](#concurrency-private-this)
     * [Isolation](#concurrency-isolation)
 
-1. [Performance](#perf)
+4. [Performance](#perf)
     * [Microbenchmarks](#perf-microbenchmarks)
     * [Traversal and zipWithIndex](#perf-whileloops)
     * [Option and null](#perf-option)
     * [Scala Collection Library](#perf-collection)
     * [private[this]](#perf-private)
 
-1. [Java Interoperability](#java)
+5. [Java Interoperability](#java)
     * [Java Features Missing from Scala](#java-missing-features)
     * [Traits and Abstract Classes](#java-traits)
     * [Type Aliases](#java-type-alias)
@@ -71,10 +67,10 @@ Scala is an incredibly powerful language that is capable of many paradigms. We h
     * [Implicits](#java-implicits)
     * [Companion Objects, Static Methods and Fields](#java-companion-object)
 
-1. [Testing](#testing)
+6. [Testing](#testing)
     * [Intercepting Exceptions](#testing-intercepting)
 
-1. [Miscellaneous](#misc)
+7. [Miscellaneous](#misc)
     * [Prefer nanoTime over currentTimeMillis](#misc_currentTimeMillis_vs_nanoTime)
     * [Prefer URI over URL](#misc_uri_url)
     * [Prefer existing well-tested methods over reinventing the wheel](#misc_well_tested_method)
