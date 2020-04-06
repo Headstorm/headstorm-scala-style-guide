@@ -2,6 +2,8 @@
 
 A pure functional Scala style guide.
 
+# NOTE: This repo is currently under HEAVY revision.
+
 This guide draws from our experience coaching and working with engineers contributing to Scala functional programming projects as well as our Scala engineering team.
 
 Scala is an incredibly powerful language that is capable of many paradigms. We have found that the following guidelines work well for us on projects with high velocity. Depending on the needs of your team, your mileage might vary.
