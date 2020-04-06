@@ -63,7 +63,6 @@ Scala is an incredibly powerful language that is capable of many paradigms. We h
     * [Type Aliases](#java-type-alias)
     * [Default Parameter Values](#java-default-param-values)
     * [Multiple Parameter Lists](#java-multi-param-list)
-    * [Varargs](#java-varargs)
     * [Implicits](#java-implicits)
     * [Companion Objects, Static Methods and Fields](#java-companion-object)
 
@@ -89,7 +88,7 @@ We mostly follow Scala's standard naming conventions.
   trait Expression
   ```
 
-- Packages should follow Java package naming conventions, i.e. all-lowercase ASCII letters.
+- Packages follow traditional Java package naming conventions, i.e. all-lowercase ASCII letters.
   ```scala
   package com.databricks.resourcemanager
   ```
@@ -338,18 +337,12 @@ val longValue = 5432l  // Do NOT do this
 
 ### <a name='doc'>Documentation Style</a>
 
-Use Java docs style instead of Scala docs style.
+Use Scala docs style.
 ```scala
 /** This is a correct one-liner, short description. */
 
-/**
- * This is correct multi-line JavaDoc comment. And
- * this is my second line, and if I keep typing, this would be
- * my third line.
- */
-
-/** In Spark, we don't use the ScalaDoc style so this
-  * is not correct.
+/** At Headstorm, we use the ScalaDoc style so this
+  * is correct.
   */
 ```
 
@@ -358,16 +351,16 @@ Use Java docs style instead of Scala docs style.
 
 If a class is long and has many methods, group them logically into different sections, and use comment headers to organize them.
 ```scala
-class DataFrame {
+class HeadStorm {
 
   ///////////////////////////////////////////////////////////////////////////
-  // DataFrame operations
+  // HeadStorm operations
   ///////////////////////////////////////////////////////////////////////////
 
   ...
 
   ///////////////////////////////////////////////////////////////////////////
-  // RDD operations
+  // Other operations
   ///////////////////////////////////////////////////////////////////////////
 
   ...
@@ -647,27 +640,6 @@ __Avoid using return in closures__. `return` is turned into ``try/catch`` of ``s
   ```
   the `.onComplete` method takes the anonymous closure `{ table => ... }` and passes it to a different thread. This closure eventually throws the `NonLocalReturnControl` exception that is captured __in a different thread__ . It has no effect on the poor method being executed here.
 
-However, there are a few cases where `return` is preferred.
-
-- Use `return` as a guard to simplify control flow without adding a level of indentation
-  ```scala
-  def doSomething(obj: Any): Any = {
-    if (obj eq null) {
-      return null
-    }
-    // do something ...
-  }
-  ```
-
-- Use `return` to terminate a loop early, rather than constructing status flags
-  ```scala
-  while (true) {
-    if (cond) {
-      return
-    }
-  }
-  ```
-
 ### <a name='recursion'>Recursion and Tail Recursion</a>
 
 __Avoid using recursion__, unless the problem can be naturally framed recursively (e.g. graph traversal, tree traversal).
@@ -760,14 +732,7 @@ __Avoid using symbol literals__. Symbol literals (e.g. `'column`) were deprecate
   ```
   is better written as
   ```scala
-  class UserService {
-    /**
-     * Look up a user's profile in the user database.
-     * @return None if the user is not found.
-     * @throws DatabaseConnectionException when we have trouble connecting to the database/
-     */
-    @throws(DatabaseConnectionException)
-    def get(userId: Int): Option[User]
+TODO
   }
   ```
   The 2nd one makes it very obvious error cases the caller needs to handle.
@@ -1008,26 +973,12 @@ The following Java features are missing from Scala. If you need the following, d
 
 ### <a name='java-traits'>Traits and Abstract Classes</a>
 
-For interfaces that can be implemented externally, keep in mind the following:
-
-- Traits with default method implementations are not usable in Java. Use abstract classes instead.
-- In general, avoid using traits unless you know for sure the interface will not have any default implementation even in its future evolution.
-```scala
-// The default implementation doesn't work in Java
-trait Listener {
-  def onTermination(): Unit = { ... }
-}
-
-// Works in Java
-abstract class Listener {
-  def onTermination(): Unit = { ... }
-}
-```
+Prefer traits over abstract classes unless your source needs to interoperate with Java
 
 
 ### <a name='java-type-alias'>Type Aliases</a>
 
-Do NOT use type aliases. They are not visible in bytecode (and Java).
+Do NOT use type aliases. They are not visible in bytecode.
 
 
 ### <a name='java-default-param-values'>Default Parameter Values</a>
@@ -1045,42 +996,6 @@ def sample(ratio: Double): RDD[T] = sample(ratio, withReplacement = false)
 ### <a name='java-multi-param-list'>Multiple Parameter Lists</a>
 
 Do NOT use multi-parameter lists.
-
-### <a name='java-varargs'>Varargs</a>
-
-- Apply `@scala.annotation.varargs` annotation for a vararg method to be usable in Java. The Scala compiler creates two methods, one for Scala (bytecode parameter is a Seq) and one for Java (bytecode parameter array).
-  ```scala
-  @scala.annotation.varargs
-  def select(exprs: Expression*): DataFrame = { ... }
-  ```
-
-- Note that abstract vararg methods does NOT work for Java, due to a Scala compiler bug ([SI-1459](https://issues.scala-lang.org/browse/SI-1459), [SI-9013](https://issues.scala-lang.org/browse/SI-9013)).
-
-- Be careful with overloading varargs methods. Overloading a vararg method with another vararg type can break source compatibility.
-  ```scala
-  class Database {
-    @scala.annotation.varargs
-    def remove(elems: String*): Unit = ...
-
-    // Adding this will break source compatibility for no-arg remove() call.
-    @scala.annotation.varargs
-    def remove(elems: People*): Unit = ...
-  }
-
-  // This won't compile anymore because it is ambiguous
-  new Database().remove()
-  ```
-  Instead, define an explicit first parameter followed by vararg:
-  ```scala
-  class Database {
-    @scala.annotation.varargs
-    def remove(elems: String*): Unit = ...
-
-    // The following is OK.
-    @scala.annotation.varargs
-    def remove(elem: People, elems: People*): Unit = ...
-  }
-  ```
 
 
 ### <a name='java-implicits'>Implicits</a>
